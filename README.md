@@ -96,4 +96,20 @@ h2
 - 해당 클래스의 빌더 패턴 클래스를 생성
 - 생성자 상단에 선언 시 생성자에 포함된 필드만 빌더에 포함   
    
-Entity클래스에서는 절대 setter메소드를 만들지 않는다. 대신, 해당 필드의 값 변경이 필요하면 명확히 그 목적과 의도를 나타낼 수 있는 메소드를 추가해야만 한다.
+Entity클래스에서는 절대 setter메소드를 만들지 않는다. 대신, 해당 필드의 값 변경이 필요하면 명확히 그 목적과 의도를 나타낼 수 있는 메소드를 추가해야만 한다.   
+   
+JpaRepository   
+MyBatis 등에서 Dao라고 불리느 DB Layer 접근자이다. JPA에선 Repository라고 부르며 인터페이스로 생성한다. 단순히 인터페이스를 생성 후, JpaRepository<Entity클래스, PK타입>를 상속하면 기본적인 CRUD 메소드가 자동으로 생성된다.   
+@Repository를 추가할 필요도 없다. 여기서 주의할 점은 Entity클래스와 기본 Entity Repository는 함께 위치해야 한다는 점이다. 둘은 아주 밀접한 관계이고, Entity 클래스는 기본 Repository없이는 제대로 역할을 할 수가 없다.   
+   
+@After   
+- Junit에서 단위 테스트가 끝날 때마다 수행되는 메소드를 지정
+- 보통은 배포 전 전체 테스트를 수행할 때 테스트간 데이터 침범을 막기 위해 사용한다.
+- 여러 테스트가 동시에 수행되면 테스트용 데이터베이스인 H2에 데이터가 그대로 남아 있어 다음 테스트 실행 시 테스트가 실패할 수 있다.   
+   
+postsRepository.save   
+- 테이블 posts에 insert/update 쿼리를 실행한다.
+- id 값이 있다면 update가, 없다면 insert쿼리가 실행된다.   
+   
+postRepository.findAll   
+- 테이블 posts에 있는 모든 데이터를 조회해오는 메소드이다.
