@@ -113,3 +113,38 @@ postsRepository.save
    
 postRepository.findAll   
 - 테이블 posts에 있는 모든 데이터를 조회해오는 메소드이다.
+   
+https://github.com/hyunha95/springboot-aws/blob/b14c49fa5541fc0132889c1ff2f20ac10e2538de/src/main/java/com/jojoldu/book/springboot/service/posts/PostsService.java#L25   
+여기서 신기한 것이 있다. update 기능에서 데이터베이스에 쿼리를 날리는 부분이 없다. 이게 가능한 이유는 JPA의 영속성 컨텍스트 때문이다.   
+영속성 컨텍스트란, 엔티티를 영구 저장한는 환경이다. 일종의 논리적 개념이라고 보면 되며, JPA의 핵심 내용은 엔티티가 영속성 컨텍스트에 포함되어 있냐 아니냐로 갈린다. JPA의 엔티티 매니저(Entity Manager)가 활성화된 상태로(Spring Data Jpa를 쓴다면 기본 옵션) 트랜잭션 안에서 데이터베이스에서 데이터를 가져오면 이 데이터는 영속성 컨텍스트가 유지된 상태이다.   
+이 상태에서 해당 데이터의 값을 변경하면 트랜잭션이 끝나느 시점에 해당 테이블에 변경분을 반영한다. 즉, Entity 객체의 값ㅁ나 변경하면 별도로 Update쿼리를 날릴 필요가 없다는 것이다. 이 개념을 더티 체킹(dirty checking)이라고 한다.   
+   
+Java8이 나오기 전까지 사용되었던 Date와 Calendar 클래스는 다음과 같은 문제점들이 있었다.   
+1. 불변(변경이 불가능한)객체가 아니다.   
+   - 멀티스레드 환경에서 언제든 문제가 발생할 수 있다.   
+2. Calendar는 월(Month)값 설계가 잘못되어있다.   
+   - 10월을 나타내는 Calendar.OCTOBER의 숫자 값은 '9'이다.
+   - 당연히 '10'으로 생각했던 개발자들에게는 큰 혼란이 왔다.   
+   
+JPA Auditing으로 생성시간/수정시간 자동화하기
+---
+BaseTimeEntity클래스는 모든 Entity의 상위 클래스가 되어 Entity들의 createdDate, modifiedDate를 자동으로 관리하는 역할을 한다.   
+@MappedSuperclass
+- JPA Entity 클래스들이 BaseTimeEntity을 상속할 경우 필드들(createdDate, modifiedDate)도 컬럼으로 인식하도록 한다.
+   
+@EntityListeners(AuditingEntityListener.class)   
+- BaseTimeEntity클래스에 Auditing 기능을 포함시킨다.   
+   
+@CreatedDate   
+- Entity가 생성되어 저장될 때 시간이 자동 저장된다.   
+   
+@LastModifiedDate   
+- 조회한 Entity의 값을 변경할 때 시간이 자동 저장된다.
+
+
+
+
+
+
+
+
