@@ -154,8 +154,16 @@ CHAPTER4 머스테치로 화면 구성하기
    
 페이지 로딩속도를 높이기 위해 css는 header에, js는 footer에 두었다. HTML은 위에서부터 코드가 실행되기 때문에 head가 다 실행되고서야 body가 실행된다.   
 즉, head가 다 불러지지 않으면 사용자 쪽에선 백지 화면만 노출된다. 특히 js의 용량이 크면 클수록 body 부분의 실행이 늦어지기 때문에 js는 body 하단에 두어 화면이 다 그려진 뒤에 호출하는 것이 좋다.   
-반면 css는 화면을 그리는 역할이므로 head에서 불러오는 것이 좋다. 그렇지 않으면 css가 적용되지 않은 깨진 화면을 사용자가 볼 수 있기 때문이다. 추가로, bootstrap.js의 경우 제이쿼리가 꼭 있어야만 하기 때문에 부트스트랩보다 먼저 호출되도록 코드를 작성한다. 보통 앞선 상활을 bootstrap.js가 제이쿼리에 의존한다고 한다.
-
+반면 css는 화면을 그리는 역할이므로 head에서 불러오는 것이 좋다. 그렇지 않으면 css가 적용되지 않은 깨진 화면을 사용자가 볼 수 있기 때문이다. 추가로, bootstrap.js의 경우 제이쿼리가 꼭 있어야만 하기 때문에 부트스트랩보다 먼저 호출되도록 코드를 작성한다. 보통 앞선 상활을 bootstrap.js가 제이쿼리에 의존한다고 한다.   
+   
+```html
+<script>/js/app/index.js</script>
+```
+index.js 호출 코드를 보면 절대 경로(/)로 바로 시작한다. 스프링 부트는 기본적으로 src/main/resources/static에 위치한 자바스크립트, CSS, 이미지 등 정적 파일들은 URL에서 /로 설정된다.   
+그래서 다음과 같이 파일이 위치하면 위치에 맞게 호출이 가능하다.
+- src/main/resources/static/js/···(http://도메인/js/···)
+- src/main/resources/static/css/···(http://도메인/css/···)
+- src/mmainresources/static/image/···(http://도메인/image/···)
 
 
 
